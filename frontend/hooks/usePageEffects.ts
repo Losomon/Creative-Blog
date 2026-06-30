@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export type ToastType = "success" | "info" | "error";
 
@@ -10,40 +10,39 @@ export interface Toast {
   type: ToastType;
 }
 
-const icons: Record<ToastType, string> = {
-  success: "✅",
-  info: "ℹ️",
-  error: "❌",
-};
+
 
 export function useToastState() {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const showToast = useCallback((message: string, type: ToastType = "info") => {
+  const showToast = (message: string, type: ToastType = "info") => {
     const id = Date.now();
     setToasts((prev) => [...prev, { id, message, type }]);
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
     }, 3000);
-  }, []);
+  };
 
   return { toasts, showToast };
 }
 
 export function useDarkMode() {
-  const [darkMode, setDarkModeState] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+  const initializedRef = useRef(false);
 
   useEffect(() => {
+    if (initializedRef.current) return;
+    initializedRef.current = true;
     const saved = localStorage.getItem("darkMode") === "true";
-    setDarkModeState(saved);
+    setDarkMode(saved);
     document.documentElement.setAttribute("data-theme", saved ? "dark" : "light");
   }, []);
 
-  const setDarkMode = useCallback((enabled: boolean) => {
-    setDarkModeState(enabled);
-    document.documentElement.setAttribute("data-theme", enabled ? "dark" : "light");
-    localStorage.setItem("darkMode", String(enabled));
-  }, []);
+  useEffect(() => {
+    if (!initializedRef.current) return;
+    document.documentElement.setAttribute("data-theme", darkMode ? "dark" : "light");
+    localStorage.setItem("darkMode", String(darkMode));
+  }, [darkMode]);
 
   return { darkMode, setDarkMode };
 }
@@ -68,8 +67,6 @@ export function useScrollEffects() {
 }
 
 export function useRevealOnScroll() {
-  const revealRefs = useRef<NodeListOf<HTMLElement> | null>(null);
-
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -83,12 +80,12 @@ export function useRevealOnScroll() {
       { threshold: 0.12 }
     );
 
-    revealRefs.current = document.querySelectorAll(".reveal");
-    revealRefs.current.forEach((el) => observer.observe(el));
+    const elements = document.querySelectorAll(".reveal");
+    elements.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
   }, []);
 
-  return revealRefs;
+  return null;
 }
 
 export function useTypingEffect(words: readonly string[]) {
