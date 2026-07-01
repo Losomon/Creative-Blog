@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — The Coding Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#6C4DF6;--primary-dark:#5A3DE8;--secondary:#8B5CF6;--accent:#A855F7;
+  --bg:#FAFBFF;--card:#FFFFFF;--border:#ECECF6;--text:#121212;--text-secondary:#4A4A5A;--gray:#6B7280;
+  --radius:20px;--shadow-sm:0 4px 20px rgba(108,77,246,0.08);--shadow-md:0 8px 32px rgba(108,77,246,0.12);--shadow-lg:0 16px 48px rgba(108,77,246,0.16);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+[data-theme="dark"]{--bg:#0A0A14;--card:#14141F;--border:#2A2A3E;--text:#F0F0FF;--text-secondary:#B0B0C8;--gray:#8A8AA0;--shadow-sm:0 4px 20px rgba(0,0,0,0.3);--shadow-md:0 8px 32px rgba(0,0,0,0.4);--shadow-lg:0 16px 48px rgba(0,0,0,0.5);}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;transition:background 0.3s ease,color 0.3s ease;}
+a{text-decoration:none;color:inherit;}
+img{max-width:100%;display:block;}
+.container{max-width:1240px;margin:0 auto;padding:0 32px;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;}
+
+.toast-container{position:fixed;bottom:24px;right:24px;z-index:1000;display:flex;flex-direction:column;gap:12px;}
+.toast{padding:16px 24px;border-radius:12px;background:var(--card);border:1px solid var(--border);box-shadow:var(--shadow-lg);font-size:14px;font-weight:500;transform:translateX(120%);animation:slideIn 0.4s ease forwards;display:flex;align-items:center;gap:12px;}
+.toast.success{border-left:4px solid #22c55e;}
+.toast.info{border-left:4px solid var(--primary);}
+.toast.error{border-left:4px solid #ef4444;}
+@keyframes slideIn{to{transform:translateX(0);}}
+@keyframes slideOut{to{transform:translateX(120%);}}
+
+.bg-shapes{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.35;transition:opacity 0.5s ease;}
+[data-theme="dark"] .blob{opacity:.15;}
+.blob1{width:520px;height:520px;background:radial-gradient(circle,var(--accent),transparent 70%);top:-180px;left:-160px;animation:drift 22s ease-in-out infinite;}
+.blob2{width:460px;height:460px;background:radial-gradient(circle,var(--primary),transparent 70%);top:30%;right:-200px;animation:drift 26s ease-in-out infinite reverse;}
+.blob3{width:380px;height:380px;background:radial-gradient(circle,var(--secondary),transparent 70%);bottom:-100px;left:20%;animation:drift 30s ease-in-out infinite;}
+@keyframes drift{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(40px,-30px) scale(1.08);}}
+.grid-pattern{position:absolute;inset:0;background-image:linear-gradient(rgba(108,77,246,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(108,77,246,.04) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,black 30%,transparent 80%);}
+[data-theme="dark"] .grid-pattern{background-image:linear-gradient(rgba(108,77,246,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(108,77,246,.08) 1px,transparent 1px);}
+
+header{position:sticky;top:0;z-index:100;padding:18px 0;transition:var(--transition);}
+header.scrolled{background:rgba(var(--bg-rgb,255,255,255),.85);backdrop-filter:blur(16px);box-shadow:0 4px 24px rgba(108,77,246,.08);padding:12px 0;}
+[data-theme="dark"] header.scrolled{background:rgba(10,10,20,.9);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:-.02em;cursor:pointer;}
+.logo-mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:#fff;font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;box-shadow:0 4px 14px rgba(108,77,246,.35);}
+.nav-links{display:flex;gap:36px;align-items:center;}
+.nav-links a{font-size:14.5px;font-weight:500;color:var(--text);position:relative;padding:4px 0;transition:color 0.2s;}
+.nav-links a:hover{color:var(--primary);}
+.nav-links a.active{color:var(--primary);}
+.nav-links a::after{content:'';position:absolute;left:0;bottom:-2px;width:0;height:2px;background:linear-gradient(90deg,var(--primary),var(--accent));transition:width 0.3s ease;border-radius:2px;}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%;}
+.nav-actions{display:flex;align-items:center;gap:16px;}
+.icon-btn{width:38px;height:38px;border-radius:10px;background:transparent;display:flex;align-items:center;justify-content:center;color:var(--text);transition:var(--transition);}
+.icon-btn:hover{background:var(--border);}
+.icon-btn:focus-visible{outline:2px solid var(--primary);outline-offset:2px;}
+.btn-ghost{padding:9px 18px;border-radius:10px;font-size:14.5px;font-weight:600;background:transparent;color:var(--text);transition:var(--transition);}
+.btn-ghost:hover{background:var(--border);}
+.btn-primary{padding:10px 20px;border-radius:10px;font-size:14.5px;font-weight:600;color:#fff;background:linear-gradient(135deg,var(--primary),var(--accent));box-shadow:0 6px 18px rgba(108,77,246,.35);transition:var(--transition);position:relative;overflow:hidden;}
+.btn-primary::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--accent),var(--primary));opacity:0;transition:opacity 0.3s;}
+.btn-primary:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 10px 24px rgba(108,77,246,.45);}
+.btn-primary:hover::before{opacity:1;}
+.btn-primary>*{position:relative;z-index:1;}
+.hamburger{display:none;flex-direction:column;gap:5px;padding:4px;cursor:pointer;}
+.hamburger span{width:24px;height:2px;background:var(--text);border-radius:2px;transition:var(--transition);}
+.hamburger.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
+.hamburger.active span:nth-child(2){opacity:0;}
+.hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
+.mobile-menu{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);z-index:99;padding:80px 32px 32px;flex-direction:column;gap:24px;overflow-y:auto;}
+.mobile-menu.active{display:flex;animation:fadeIn 0.3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+.mobile-menu a{font-size:20px;font-weight:600;padding:12px 0;border-bottom:1px solid var(--border);transition:var(--transition);}
+.mobile-menu a:hover{color:var(--primary);padding-left:8px;}
+
+/* Hero */
+.hero{padding:70px 0 50px;}
+.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center;}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border-radius:100px;background:rgba(108,77,246,.08);color:var(--primary);font-size:12.5px;font-weight:700;letter-spacing:.06em;margin-bottom:20px;border:1px solid rgba(108,77,246,.15);}
+.hero h1{font-size:clamp(34px,4.6vw,50px);font-weight:800;letter-spacing:-.02em;margin-bottom:20px;line-height:1.12;}
+.hero h1 span{background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.hero p{font-size:16.5px;color:var(--text-secondary);line-height:1.75;margin-bottom:16px;}
+.hero-photo{position:relative;border-radius:24px;overflow:hidden;box-shadow:var(--shadow-lg);height:380px;}
+.hero-photo img{width:100%;height:100%;object-fit:cover;}
+.hero-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(15,8,30,.55) 100%);}
+
+.section{padding:36px 0 70px;}
+.section-head{text-align:center;max-width:640px;margin:0 auto 40px;}
+.section-head h2{font-size:32px;font-weight:800;letter-spacing:-.02em;margin-bottom:10px;}
+.section-head p{color:var(--text-secondary);font-size:15px;line-height:1.6;}
+
+/* Stats */
+.stats-card{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:36px 20px;display:grid;grid-template-columns:repeat(4,1fr);box-shadow:var(--shadow-sm);transition:var(--transition);}
+.stat{display:flex;gap:16px;align-items:center;padding:0 20px;border-right:1px solid var(--border);}
+.stat:last-child{border-right:none;}
+.stat-icon{width:48px;height:48px;border-radius:13px;background:rgba(108,77,246,.08);display:flex;align-items:center;justify-content:center;color:var(--primary);flex-shrink:0;}
+.stat-num{font-size:28px;font-weight:800;letter-spacing:-.01em;}
+.stat-label{font-size:13px;color:var(--text);font-weight:600;}
+.stat-sub{font-size:12px;color:var(--gray);}
+
+/* Values */
+.values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+.value-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px;transition:var(--transition);}
+.value-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-md);}
+.value-icon{width:48px;height:48px;border-radius:13px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;margin-bottom:18px;}
+.value-card h4{font-size:17px;font-weight:700;margin-bottom:8px;}
+.value-card p{font-size:13.5px;color:var(--text-secondary);line-height:1.6;}
+
+/* Timeline */
+.timeline{max-width:720px;margin:0 auto;position:relative;padding-left:32px;}
+.timeline::before{content:'';position:absolute;left:6px;top:6px;bottom:6px;width:2px;background:linear-gradient(180deg,var(--primary),var(--accent));}
+.tl-item{position:relative;padding-bottom:38px;}
+.tl-item:last-child{padding-bottom:0;}
+.tl-dot{position:absolute;left:-32px;top:2px;width:14px;height:14px;border-radius:50%;background:var(--primary);border:3px solid var(--bg);box-shadow:0 0 0 2px var(--primary);}
+.tl-year{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--primary);font-weight:600;margin-bottom:4px;}
+.tl-item h4{font-size:16.5px;font-weight:700;margin-bottom:4px;}
+.tl-item p{font-size:13.5px;color:var(--text-secondary);line-height:1.6;}
+
+/* Team */
+.team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
+.team-card{background:var(--card);border:1px solid var(--border);border-radius:18px;overflow:hidden;transition:var(--transition);text-align:center;}
+.team-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-md);}
+.team-photo{height:200px;position:relative;overflow:hidden;}
+.team-photo img{width:100%;height:100%;object-fit:cover;transition:transform .5s;}
+.team-card:hover .team-photo img{transform:scale(1.08);}
+.team-social{position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(15,8,30,.85) 100%);display:flex;align-items:flex-end;justify-content:center;gap:8px;padding-bottom:14px;opacity:0;transition:var(--transition);}
+.team-card:hover .team-social{opacity:1;}
+.team-social a{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.15);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;color:#fff;transition:var(--transition);}
+.team-social a:hover{background:var(--primary);}
+.team-body{padding:16px 14px 20px;}
+.team-body h4{font-size:15px;font-weight:700;margin-bottom:2px;}
+.team-body span{font-size:12.5px;color:var(--gray);}
+
+.reveal{opacity:0;clip-path:inset(0 0 100% 0 round 20px);transform:translateY(24px) scale(.985);transition:clip-path 0.9s cubic-bezier(0.16,0.84,0.44,1),opacity 0.5s ease,transform 0.9s cubic-bezier(0.16,0.84,0.44,1);}
+.reveal.in{opacity:1;clip-path:inset(0 0 0% 0 round 20px);transform:translateY(0) scale(1);}
+@media (prefers-reduced-motion: reduce){.reveal{transition-duration:.01ms !important;clip-path:none !important;transform:none !important;}}
+
+.newsletter{border-radius:28px;background:linear-gradient(120deg,#5a3de8,#8B5CF6 55%,#A855F7);padding:0;overflow:hidden;position:relative;}
+.news-grid{display:grid;grid-template-columns:1.1fr .9fr;align-items:center;}
+.news-left{padding:56px 56px;color:#fff;position:relative;z-index:2;}
+.news-left h2{font-size:34px;font-weight:800;margin-bottom:14px;line-height:1.2;}
+.news-left p{opacity:.85;font-size:15px;line-height:1.7;margin-bottom:28px;max-width:420px;}
+.news-form{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;}
+.news-form input{flex:1;padding:14px 18px;border-radius:11px;border:none;font-size:14.5px;font-family:inherit;min-width:200px;background:rgba(255,255,255,.95);transition:var(--transition);}
+.news-form input:focus{outline:2px solid #fff;transform:scale(1.01);}
+.news-form button{padding:14px 22px;border-radius:11px;background:#fff;color:var(--primary);font-weight:700;font-size:14.5px;transition:var(--transition);}
+.news-form button:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 8px 24px rgba(0,0,0,.2);}
+.news-tags{display:flex;gap:18px;font-size:12px;opacity:.75;flex-wrap:wrap;}
+.news-right{position:relative;height:100%;min-height:340px;display:flex;align-items:center;justify-content:center;}
+.envelope{width:200px;animation:floaty 5s ease-in-out infinite;filter:drop-shadow(0 20px 40px rgba(0,0,0,.25));}
+.plane{position:absolute;top:30px;right:50px;width:60px;animation:plane-float 4s ease-in-out infinite;}
+@keyframes plane-float{0%,100%{transform:translate(0,0) rotate(-8deg);}50%{transform:translate(-12px,-16px) rotate(-4deg);}}
+@keyframes floaty{0%,100%{transform:translateY(0);}50%{transform:translateY(-16px);}}
+
+footer{background:#0E0A1F;color:#cfc9e8;padding:64px 0 28px;margin-top:60px;}
+.footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1.4fr;gap:40px;margin-bottom:48px;}
+.footer-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;color:#fff;margin-bottom:16px;}
+.footer-col p{font-size:13.5px;line-height:1.7;color:#9a91c4;max-width:280px;}
+.footer-col h5{color:#fff;font-size:13.5px;font-weight:700;margin-bottom:18px;letter-spacing:.03em;}
+.footer-col ul{list-style:none;}
+.footer-col ul li{margin-bottom:11px;}
+.footer-col ul a{font-size:13.5px;color:#9a91c4;transition:color .2s;display:inline-block;}
+.footer-col ul a:hover{color:#fff;transform:translateX(4px);}
+.footer-news{display:flex;gap:8px;margin-top:14px;}
+.footer-news input{flex:1;padding:11px 14px;border-radius:9px;border:1px solid #2a2350;background:#171029;color:#fff;font-size:13px;transition:var(--transition);}
+.footer-news input:focus{outline:2px solid var(--primary);border-color:transparent;}
+.footer-news input::placeholder{color:#5a5270;}
+.footer-news button{width:42px;border-radius:9px;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;display:flex;align-items:center;justify-content:center;transition:var(--transition);}
+.footer-news button:hover{transform:scale(1.05);}
+.socials{display:flex;gap:10px;margin-top:16px;}
+.socials a{width:36px;height:36px;border-radius:9px;background:#171029;display:flex;align-items:center;justify-content:center;color:#cfc9e8;transition:var(--transition);}
+.socials a:hover{background:var(--primary);color:#fff;transform:translateY(-3px);}
+.footer-bottom{border-top:1px solid #211a3f;padding-top:24px;display:flex;justify-content:space-between;font-size:12.5px;color:#766fa0;flex-wrap:wrap;gap:10px;}
+.footer-bottom a{color:#9a91c4;margin-left:18px;transition:color .2s;}
+.footer-bottom a:hover{color:#fff;}
+
+.scroll-top{position:fixed;bottom:24px;right:24px;width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-md);opacity:0;transform:translateY(20px);transition:var(--transition);z-index:50;cursor:pointer;}
+.scroll-top.visible{opacity:1;transform:translateY(0);}
+.scroll-top:hover{transform:translateY(-4px) scale(1.05);box-shadow:var(--shadow-lg);}
+
+@media(max-width:1080px){
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  .hero-grid{grid-template-columns:1fr;}
+  .hero-photo{height:280px;order:-1;}
+  .stats-card{grid-template-columns:repeat(2,1fr);gap:24px;}
+  .stat{border-right:none;}
+  .values-grid{grid-template-columns:1fr;}
+  .team-grid{grid-template-columns:repeat(2,1fr);}
+  .news-grid{grid-template-columns:1fr;}
+  .news-right{display:none;}
+  .footer-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:640px){
+  .container{padding:0 16px;}
+  .stats-card{grid-template-columns:1fr;}
+  .stat{padding:12px 0;border-bottom:1px solid var(--border);}
+  .stat:last-child{border-bottom:none;}
+  .team-grid{grid-template-columns:1fr;}
+  .news-left{padding:32px 24px;}
+  .news-left h2{font-size:26px;}
+  .footer-grid{grid-template-columns:1fr;}
+  .nav-actions .btn-ghost,.nav-actions .btn-primary{display:none;}
+  .section-head h2{font-size:26px;}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-shapes"><div class="grid-pattern"></div><div class="blob blob1"></div><div class="blob blob2"></div><div class="blob blob3"></div></div>
+<div class="toast-container" id="toastContainer"></div>
+<button class="scroll-top" id="scrollTop" aria-label="Scroll to top"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg></button>
+
+<header id="header">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo"><span class="logo-mark">{ }</span>The Coding Ledger</a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="articles.html">Articles</a>
+      <a href="categories.html">Categories</a>
+      <a href="resources.html">Resources</a>
+      <a href="about.html" class="active">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn" aria-label="Search" id="searchBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+      <button class="icon-btn" aria-label="Toggle dark mode" id="darkToggle"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+      <a href="contact.html" class="btn-ghost">Sign In</a>
+      <a href="contact.html" class="btn-primary">Get Started</a>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Home</a>
+  <a href="articles.html">Articles</a>
+  <a href="categories.html">Categories</a>
+  <a href="resources.html">Resources</a>
+  <a href="about.html" class="active">About</a>
+  <a href="contact.html">Contact</a>
+  <a href="contact.html" class="btn-primary" style="text-align:center;margin-top:12px;">Get Started</a>
+</div>
+
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <div class="eyebrow">OUR STORY</div>
+      <h1>Built by developers, <span>for developers.</span></h1>
+      <p>The Coding Ledger started as one engineer's notebook of things he wished someone had explained clearly the first time. It's grown into a publication read by thousands of developers every week — but the goal hasn't changed.</p>
+      <p>We write the tutorial we'd want to read: practical, honest about trade-offs, and never padded to hit a word count.</p>
+    </div>
+    <div class="hero-photo">
+      <img src="https://picsum.photos/id/60/700/800" alt="Team working together at a desk with laptops">
+    </div>
+  </div>
+</section>
+
+<section class="section reveal">
+  <div class="container">
+    <div class="stats-card" id="statsCard">
+      <div class="stat"><div class="stat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><div><div class="stat-num" data-count="120">0</div><div class="stat-label">Tutorials</div><div class="stat-sub">In-depth guides</div></div></div>
+      <div class="stat"><div class="stat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div><div><div class="stat-num" data-count="50">0</div><div class="stat-label">Projects</div><div class="stat-sub">Real-world projects</div></div></div>
+      <div class="stat"><div class="stat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div><div class="stat-num" data-count="15" data-suffix="K">0</div><div class="stat-label">Subscribers</div><div class="stat-sub">Growing community</div></div></div>
+      <div class="stat"><div class="stat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div><div><div class="stat-num" data-count="500" data-suffix="K">0</div><div class="stat-label">Monthly Readers</div><div class="stat-sub">Across the globe</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section reveal">
+  <div class="container">
+    <div class="section-head"><h2>What we care about</h2><p>Three things guide every article we publish.</p></div>
+    <div class="values-grid">
+      <div class="value-card"><div class="value-icon" style="background:linear-gradient(135deg,#6C4DF6,#A855F7);">🎯</div><h4>Practical over trendy</h4><p>If it won't survive contact with a real codebase, we don't publish it. No hype for hype's sake.</p></div>
+      <div class="value-card"><div class="value-icon" style="background:linear-gradient(135deg,#3b82f6,#A855F7);">🔍</div><h4>Honest about trade-offs</h4><p>Every tool has a downside. We tell you what it is before you find out the hard way.</p></div>
+      <div class="value-card"><div class="value-icon" style="background:linear-gradient(135deg,#22c55e,#A855F7);">🤝</div><h4>Written for humans</h4><p>Clear language, real examples, no jargon for the sake of sounding smart.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section reveal">
+  <div class="container">
+    <div class="section-head"><h2>How we got here</h2></div>
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2021</div><h4>The first post</h4><p>A single Markdown file explaining Docker to a friend. It got shared more than expected.</p></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2022</div><h4>Weekly cadence</h4><p>Committed to publishing every week — and started building an actual editorial process.</p></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2023</div><h4>10,000 subscribers</h4><p>Brought on two contributing writers to cover DevOps and career topics properly.</p></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2024</div><h4>The Coding Ledger, rebuilt</h4><p>A full redesign focused on making tutorials easier to scan, save, and actually finish.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section reveal">
+  <div class="container">
+    <div class="section-head"><h2>Who writes this</h2><p>A small team, each covering the areas they actually work in day to day.</p></div>
+    <div class="team-grid" id="teamGrid"></div>
+  </div>
+</section>
+
+<section class="section reveal">
+  <div class="container">
+    <div class="newsletter">
+      <div class="news-grid">
+        <div class="news-left">
+          <h2>Want to write for us?</h2>
+          <p>We're always open to guest contributors who write the way we do — clear, honest, and practical.</p>
+          <form class="news-form" id="pitchForm" onsubmit="handlePitch(event)">
+            <input type="email" id="pitchEmail" placeholder="Your email address" required>
+            <button type="submit">Send a pitch</button>
+          </form>
+          <div class="news-tags"><span>✓ We reply within a week</span><span>✓ Paid contributions</span></div>
+        </div>
+        <div class="news-right">
+          <svg class="plane" viewBox="0 0 60 60" fill="none"><path d="M5 30L55 5L40 55L28 35L5 30Z" fill="#fff" opacity=".9"/></svg>
+          <svg class="envelope" viewBox="0 0 200 160" fill="none">
+            <rect x="10" y="30" width="180" height="120" rx="14" fill="#fff" opacity=".95"/>
+            <path d="M10 40 L100 110 L190 40" stroke="#A855F7" stroke-width="6" fill="none"/>
+            <rect x="10" y="30" width="180" height="120" rx="14" stroke="#A855F7" stroke-width="3" fill="none" opacity=".4"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="footer-logo"><span class="logo-mark">{ }</span>The Coding Ledger</div>
+        <p>A platform dedicated to helping developers level up their skills through in-depth tutorials, real-world projects, and practical insights.</p>
+        <div class="socials">
+          <a href="#" aria-label="Twitter"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a>
+          <a href="#" aria-label="GitHub"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.98 5.24.98 11.52c0 4.84 3.14 8.94 7.49 10.39.55.1.75-.24.75-.53v-2.06c-3.05.67-3.69-1.31-3.69-1.31-.5-1.27-1.22-1.6-1.22-1.6-1-.68.08-.67.08-.67 1.1.08 1.68 1.13 1.68 1.13.98 1.68 2.57 1.2 3.2.91.1-.71.39-1.2.7-1.47-2.43-.28-5-1.22-5-5.41 0-1.19.43-2.17 1.13-2.93-.11-.28-.49-1.4.11-2.92 0 0 .92-.3 3.02 1.12a10.5 10.5 0 0 1 5.5 0c2.1-1.42 3.02-1.12 3.02-1.12.6 1.52.22 2.64.11 2.92.7.76 1.13 1.74 1.13 2.93 0 4.2-2.57 5.13-5.02 5.4.4.35.75 1.03.75 2.08v3.08c0 .29.2.64.76.53A11.03 11.03 0 0 0 23.02 11.5C23.02 5.24 18.27.5 12 .5z"/></svg></a>
+          <a href="#" aria-label="LinkedIn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5C4.98 4.88 3.86 6 2.48 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8.25h4V23h-4V8.25zM8.5 8.25h3.83v2.02h.05c.53-1 1.85-2.06 3.8-2.06 4.06 0 4.82 2.67 4.82 6.14V23h-4v-6.78c0-1.62-.03-3.7-2.25-3.7-2.26 0-2.6 1.76-2.6 3.58V23h-4V8.25z"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col"><h5>Quick Links</h5><ul><li><a href="index.html">Home</a></li><li><a href="articles.html">Articles</a></li><li><a href="categories.html">Categories</a></li><li><a href="resources.html">Resources</a></li><li><a href="about.html">About Us</a></li><li><a href="contact.html">Contact</a></li></ul></div>
+      <div class="footer-col"><h5>Categories</h5><ul><li><a href="categories.html">Frontend</a></li><li><a href="categories.html">Backend</a></li><li><a href="categories.html">DevOps</a></li><li><a href="categories.html">Databases</a></li><li><a href="categories.html">AI &amp; ML</a></li><li><a href="categories.html">Career</a></li></ul></div>
+      <div class="footer-col">
+        <h5>Newsletter</h5><p>Get the best content straight to your inbox.</p>
+        <div class="footer-news"><input type="email" placeholder="Enter your email" id="footerNewsletter"><button aria-label="Subscribe" onclick="handleFooterNewsletter()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2024 The Coding Ledger. All rights reserved.</span><span><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></span></div>
+  </div>
+</footer>
+
+<script>
+function showToast(message, type = 'info') {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  const icons = { success: '✅', info: 'ℹ️', error: '❌' };
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `<span>${icons[type] || 'ℹ️'}</span> ${message}`;
+  container.appendChild(toast);
+  setTimeout(() => { toast.style.animation = 'slideOut 0.4s ease forwards'; setTimeout(() => toast.remove(), 400); }, 3000);
+}
+const header = document.getElementById('header');
+window.addEventListener('scroll', () => {
+  header.classList.toggle('scrolled', window.scrollY > 30);
+  document.getElementById('scrollTop').classList.toggle('visible', window.scrollY > 500);
+});
+document.getElementById('scrollTop').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+const darkToggle = document.getElementById('darkToggle');
+let darkMode = localStorage.getItem('darkMode') === 'true';
+function setDarkMode(enabled){
+  darkMode = enabled;
+  document.documentElement.setAttribute('data-theme', enabled ? 'dark' : 'light');
+  localStorage.setItem('darkMode', enabled);
+  darkToggle.innerHTML = enabled
+    ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707"/><circle cx="12" cy="12" r="5"/></svg>'
+    : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+}
+setDarkMode(darkMode);
+darkToggle.addEventListener('click', () => setDarkMode(!darkMode));
+
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('active');
+  mobileMenu.classList.toggle('active');
+  document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+});
+document.querySelectorAll('.mobile-menu a').forEach(link => link.addEventListener('click', () => {
+  hamburger.classList.remove('active'); mobileMenu.classList.remove('active'); document.body.style.overflow = '';
+}));
+document.getElementById('searchBtn').addEventListener('click', () => { window.location.href = 'articles.html'; });
+
+function handlePitch(e){
+  e.preventDefault();
+  const email = document.getElementById('pitchEmail').value;
+  if (email) { showToast(`✍️ Thanks! We'll reach out to ${email} soon.`, 'success'); document.getElementById('pitchEmail').value = ''; }
+}
+function handleFooterNewsletter(){
+  const input = document.getElementById('footerNewsletter');
+  if (input.value) { showToast(`🎉 Subscribed with ${input.value}!`, 'success'); input.value = ''; }
+}
+
+// Stat counters
+const statEls = document.querySelectorAll('.stat-num');
+let counted = false;
+const statIo = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting && !counted) {
+      counted = true;
+      statEls.forEach(el => {
+        const target = parseInt(el.dataset.count);
+        const suffix = el.dataset.suffix || '+';
+        let cur = 0;
+        const step = Math.max(1, Math.ceil(target / 40));
+        const t = setInterval(() => { cur += step; if (cur >= target) { cur = target; clearInterval(t); } el.textContent = cur + suffix; }, 30);
+      });
+    }
+  });
+}, { threshold: .4 });
+if (document.querySelector('.stats-card')) statIo.observe(document.querySelector('.stats-card'));
+
+// Team data
+const team = [
+  { name: 'Solomon Mboni', role: 'Founder & Editor', img: 'https://i.pravatar.cc/300?img=51' },
+  { name: 'Amara Chen', role: 'Frontend & Design', img: 'https://i.pravatar.cc/300?img=47' },
+  { name: 'Diego Fernandez', role: 'Backend & DevOps', img: 'https://i.pravatar.cc/300?img=33' },
+  { name: 'Priya Nair', role: 'Career & Community', img: 'https://i.pravatar.cc/300?img=44' },
+];
+document.getElementById('teamGrid').innerHTML = team.map(t => `
+  <div class="team-card">
+    <div class="team-photo">
+      <img src="${t.img}" alt="${t.name}">
+      <div class="team-social">
+        <a href="#" aria-label="Twitter"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a>
+        <a href="#" aria-label="LinkedIn"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5C4.98 4.88 3.86 6 2.48 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8.25h4V23h-4V8.25zM8.5 8.25h3.83v2.02h.05c.53-1 1.85-2.06 3.8-2.06 4.06 0 4.82 2.67 4.82 6.14V23h-4v-6.78c0-1.62-.03-3.7-2.25-3.7-2.26 0-2.6 1.76-2.6 3.58V23h-4V8.25z"/></svg></a>
+      </div>
+    </div>
+    <div class="team-body"><h4>${t.name}</h4><span>${t.role}</span></div>
+  </div>
+`).join('');
+
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold: .12 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') { mobileMenu.classList.remove('active'); hamburger.classList.remove('active'); document.body.style.overflow = ''; }
+});
+</script>
+</body>
+</html>
