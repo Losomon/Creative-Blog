@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — The Coding Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#6C4DF6;--primary-dark:#5A3DE8;--secondary:#8B5CF6;--accent:#A855F7;
+  --bg:#FAFBFF;--card:#FFFFFF;--border:#ECECF6;--text:#121212;--text-secondary:#4A4A5A;--gray:#6B7280;
+  --radius:20px;--shadow-sm:0 4px 20px rgba(108,77,246,0.08);--shadow-md:0 8px 32px rgba(108,77,246,0.12);--shadow-lg:0 16px 48px rgba(108,77,246,0.16);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+[data-theme="dark"]{--bg:#0A0A14;--card:#14141F;--border:#2A2A3E;--text:#F0F0FF;--text-secondary:#B0B0C8;--gray:#8A8AA0;--shadow-sm:0 4px 20px rgba(0,0,0,0.3);--shadow-md:0 8px 32px rgba(0,0,0,0.4);--shadow-lg:0 16px 48px rgba(0,0,0,0.5);}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;transition:background 0.3s ease,color 0.3s ease;}
+a{text-decoration:none;color:inherit;}
+img{max-width:100%;display:block;}
+.container{max-width:1240px;margin:0 auto;padding:0 32px;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;}
+
+.toast-container{position:fixed;bottom:24px;right:24px;z-index:1000;display:flex;flex-direction:column;gap:12px;}
+.toast{padding:16px 24px;border-radius:12px;background:var(--card);border:1px solid var(--border);box-shadow:var(--shadow-lg);font-size:14px;font-weight:500;transform:translateX(120%);animation:slideIn 0.4s ease forwards;display:flex;align-items:center;gap:12px;}
+.toast.success{border-left:4px solid #22c55e;}
+.toast.info{border-left:4px solid var(--primary);}
+.toast.error{border-left:4px solid #ef4444;}
+@keyframes slideIn{to{transform:translateX(0);}}
+@keyframes slideOut{to{transform:translateX(120%);}}
+
+.bg-shapes{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.35;transition:opacity 0.5s ease;}
+[data-theme="dark"] .blob{opacity:.15;}
+.blob1{width:520px;height:520px;background:radial-gradient(circle,var(--accent),transparent 70%);top:-180px;left:-160px;animation:drift 22s ease-in-out infinite;}
+.blob2{width:460px;height:460px;background:radial-gradient(circle,var(--primary),transparent 70%);top:30%;right:-200px;animation:drift 26s ease-in-out infinite reverse;}
+.blob3{width:380px;height:380px;background:radial-gradient(circle,var(--secondary),transparent 70%);bottom:-100px;left:20%;animation:drift 30s ease-in-out infinite;}
+@keyframes drift{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(40px,-30px) scale(1.08);}}
+.grid-pattern{position:absolute;inset:0;background-image:linear-gradient(rgba(108,77,246,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(108,77,246,.04) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,black 30%,transparent 80%);}
+[data-theme="dark"] .grid-pattern{background-image:linear-gradient(rgba(108,77,246,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(108,77,246,.08) 1px,transparent 1px);}
+
+header{position:sticky;top:0;z-index:100;padding:18px 0;transition:var(--transition);}
+header.scrolled{background:rgba(var(--bg-rgb,255,255,255),.85);backdrop-filter:blur(16px);box-shadow:0 4px 24px rgba(108,77,246,.08);padding:12px 0;}
+[data-theme="dark"] header.scrolled{background:rgba(10,10,20,.9);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:-.02em;cursor:pointer;}
+.logo-mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:#fff;font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;box-shadow:0 4px 14px rgba(108,77,246,.35);}
+.nav-links{display:flex;gap:36px;align-items:center;}
+.nav-links a{font-size:14.5px;font-weight:500;color:var(--text);position:relative;padding:4px 0;transition:color 0.2s;}
+.nav-links a:hover{color:var(--primary);}
+.nav-links a.active{color:var(--primary);}
+.nav-links a::after{content:'';position:absolute;left:0;bottom:-2px;width:0;height:2px;background:linear-gradient(90deg,var(--primary),var(--accent));transition:width 0.3s ease;border-radius:2px;}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%;}
+.nav-actions{display:flex;align-items:center;gap:16px;}
+.icon-btn{width:38px;height:38px;border-radius:10px;background:transparent;display:flex;align-items:center;justify-content:center;color:var(--text);transition:var(--transition);}
+.icon-btn:hover{background:var(--border);}
+.icon-btn:focus-visible{outline:2px solid var(--primary);outline-offset:2px;}
+.btn-ghost{padding:9px 18px;border-radius:10px;font-size:14.5px;font-weight:600;background:transparent;color:var(--text);transition:var(--transition);}
+.btn-ghost:hover{background:var(--border);}
+.btn-primary{padding:10px 20px;border-radius:10px;font-size:14.5px;font-weight:600;color:#fff;background:linear-gradient(135deg,var(--primary),var(--accent));box-shadow:0 6px 18px rgba(108,77,246,.35);transition:var(--transition);position:relative;overflow:hidden;}
+.btn-primary::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--accent),var(--primary));opacity:0;transition:opacity 0.3s;}
+.btn-primary:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 10px 24px rgba(108,77,246,.45);}
+.btn-primary:hover::before{opacity:1;}
+.btn-primary>*{position:relative;z-index:1;}
+.hamburger{display:none;flex-direction:column;gap:5px;padding:4px;cursor:pointer;}
+.hamburger span{width:24px;height:2px;background:var(--text);border-radius:2px;transition:var(--transition);}
+.hamburger.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
+.hamburger.active span:nth-child(2){opacity:0;}
+.hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
+.mobile-menu{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);z-index:99;padding:80px 32px 32px;flex-direction:column;gap:24px;overflow-y:auto;}
+.mobile-menu.active{display:flex;animation:fadeIn 0.3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+.mobile-menu a{font-size:20px;font-weight:600;padding:12px 0;border-bottom:1px solid var(--border);transition:var(--transition);}
+.mobile-menu a:hover{color:var(--primary);padding-left:8px;}
+
+.page-hero{padding:64px 0 30px;text-align:center;}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border-radius:100px;background:rgba(108,77,246,.08);color:var(--primary);font-size:12.5px;font-weight:700;letter-spacing:.06em;margin-bottom:20px;border:1px solid rgba(108,77,246,.15);}
+.page-hero h1{font-size:clamp(34px,4.6vw,50px);font-weight:800;letter-spacing:-.02em;margin-bottom:16px;}
+.page-hero h1 span{background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.page-hero p{font-size:16.5px;color:var(--text-secondary);line-height:1.7;max-width:560px;margin:0 auto;}
+
+.section{padding:26px 0 70px;}
+
+/* Contact info cards */
+.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-bottom:52px;}
+.info-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px;transition:var(--transition);}
+.info-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-md);}
+.info-icon{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:19px;margin-bottom:16px;}
+.info-card h4{font-size:15.5px;font-weight:700;margin-bottom:6px;}
+.info-card p{font-size:13.5px;color:var(--text-secondary);line-height:1.6;margin-bottom:4px;}
+.info-card a{color:var(--primary);font-weight:600;font-size:13.5px;}
+
+/* Contact layout: form + side panel */
+.contact-grid{display:grid;grid-template-columns:1.3fr .9fr;gap:32px;align-items:start;}
+.form-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:40px;box-shadow:var(--shadow-sm);}
+.form-card h3{font-size:22px;font-weight:800;margin-bottom:6px;}
+.form-card>p{font-size:14px;color:var(--text-secondary);margin-bottom:28px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-group.full{grid-column:1/-1;}
+.form-group label{font-size:12.5px;font-weight:700;color:var(--text-secondary);}
+.form-group input,.form-group select,.form-group textarea{padding:13px 16px;border-radius:11px;border:1.5px solid var(--border);background:var(--bg);color:var(--text);font-family:inherit;font-size:14.5px;transition:var(--transition);}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(108,77,246,.1);}
+.form-group textarea{resize:vertical;min-height:120px;}
+.field-error{font-size:12px;color:#ef4444;min-height:16px;}
+.submit-btn{padding:15px 28px;border-radius:12px;font-size:15px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--primary),var(--accent));box-shadow:0 10px 26px rgba(108,77,246,.35);transition:var(--transition);width:100%;margin-top:8px;}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(108,77,246,.45);}
+.submit-btn:disabled{opacity:.7;cursor:not-allowed;transform:none;}
+
+/* Side panel */
+.side-panel{display:flex;flex-direction:column;gap:20px;}
+.side-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:26px;}
+.side-card h4{font-size:15px;font-weight:700;margin-bottom:14px;}
+.hours-row{display:flex;justify-content:space-between;font-size:13.5px;padding:8px 0;border-bottom:1px solid var(--border);color:var(--text-secondary);}
+.hours-row:last-child{border-bottom:none;}
+.hours-row span:last-child{color:var(--text);font-weight:600;}
+.side-card.gradient{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;}
+.side-card.gradient h4{color:#fff;}
+.side-card.gradient p{font-size:13px;opacity:.9;line-height:1.6;margin-bottom:16px;}
+.side-social{display:flex;gap:10px;}
+.side-social a{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.15);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;color:#fff;transition:var(--transition);}
+.side-social a:hover{background:rgba(255,255,255,.28);transform:translateY(-2px);}
+
+/* FAQ mini */
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 24px;}
+.faq-item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 24px;cursor:pointer;transition:var(--transition);}
+.faq-item:hover{border-color:var(--primary);}
+.faq-item.open{border-color:var(--primary);box-shadow:var(--shadow-sm);}
+.faq-q{display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:14.5px;gap:12px;}
+.faq-q svg{transition:transform .3s;flex-shrink:0;color:var(--primary);}
+.faq-item.open .faq-q svg{transform:rotate(45deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease,margin-top .35s ease,opacity .35s ease;font-size:13px;color:var(--text-secondary);line-height:1.6;opacity:0;}
+.faq-item.open .faq-a{max-height:200px;margin-top:12px;opacity:1;}
+
+.reveal{opacity:0;clip-path:inset(0 0 100% 0 round 20px);transform:translateY(24px) scale(.985);transition:clip-path 0.9s cubic-bezier(0.16,0.84,0.44,1),opacity 0.5s ease,transform 0.9s cubic-bezier(0.16,0.84,0.44,1);}
+.reveal.in{opacity:1;clip-path:inset(0 0 0% 0 round 20px);transform:translateY(0) scale(1);}
+@media (prefers-reduced-motion: reduce){.reveal{transition-duration:.01ms !important;clip-path:none !important;transform:none !important;}}
+
+.section-head{margin-bottom:30px;text-align:center;}
+.section-head h2{font-size:28px;font-weight:800;letter-spacing:-.02em;}
+
+footer{background:#0E0A1F;color:#cfc9e8;padding:64px 0 28px;margin-top:20px;}
+.footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1.4fr;gap:40px;margin-bottom:48px;}
+.footer-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;color:#fff;margin-bottom:16px;}
+.footer-col p{font-size:13.5px;line-height:1.7;color:#9a91c4;max-width:280px;}
+.footer-col h5{color:#fff;font-size:13.5px;font-weight:700;margin-bottom:18px;letter-spacing:.03em;}
+.footer-col ul{list-style:none;}
+.footer-col ul li{margin-bottom:11px;}
+.footer-col ul a{font-size:13.5px;color:#9a91c4;transition:color .2s;display:inline-block;}
+.footer-col ul a:hover{color:#fff;transform:translateX(4px);}
+.footer-news{display:flex;gap:8px;margin-top:14px;}
+.footer-news input{flex:1;padding:11px 14px;border-radius:9px;border:1px solid #2a2350;background:#171029;color:#fff;font-size:13px;transition:var(--transition);}
+.footer-news input:focus{outline:2px solid var(--primary);border-color:transparent;}
+.footer-news input::placeholder{color:#5a5270;}
+.footer-news button{width:42px;border-radius:9px;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;display:flex;align-items:center;justify-content:center;transition:var(--transition);}
+.footer-news button:hover{transform:scale(1.05);}
+.socials{display:flex;gap:10px;margin-top:16px;}
+.socials a{width:36px;height:36px;border-radius:9px;background:#171029;display:flex;align-items:center;justify-content:center;color:#cfc9e8;transition:var(--transition);}
+.socials a:hover{background:var(--primary);color:#fff;transform:translateY(-3px);}
+.footer-bottom{border-top:1px solid #211a3f;padding-top:24px;display:flex;justify-content:space-between;font-size:12.5px;color:#766fa0;flex-wrap:wrap;gap:10px;}
+.footer-bottom a{color:#9a91c4;margin-left:18px;transition:color .2s;}
+.footer-bottom a:hover{color:#fff;}
+
+.scroll-top{position:fixed;bottom:24px;right:24px;width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-md);opacity:0;transform:translateY(20px);transition:var(--transition);z-index:50;cursor:pointer;}
+.scroll-top.visible{opacity:1;transform:translateY(0);}
+.scroll-top:hover{transform:translateY(-4px) scale(1.05);box-shadow:var(--shadow-lg);}
+
+@media(max-width:1080px){
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  .info-grid{grid-template-columns:1fr;}
+  .contact-grid{grid-template-columns:1fr;}
+  .faq-grid{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:640px){
+  .container{padding:0 16px;}
+  .form-card{padding:24px;}
+  .form-row{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr;}
+  .nav-actions .btn-ghost,.nav-actions .btn-primary{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-shapes"><div class="grid-pattern"></div><div class="blob blob1"></div><div class="blob blob2"></div><div class="blob blob3"></div></div>
+<div class="toast-container" id="toastContainer"></div>
+<button class="scroll-top" id="scrollTop" aria-label="Scroll to top"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg></button>
+
+<header id="header">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo"><span class="logo-mark">{ }</span>The Coding Ledger</a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="articles.html">Articles</a>
+      <a href="categories.html">Categories</a>
+      <a href="resources.html">Resources</a>
+      <a href="about.html">About</a>
+      <a href="contact.html" class="active">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn" aria-label="Search" id="searchBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+      <button class="icon-btn" aria-label="Toggle dark mode" id="darkToggle"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+      <a href="contact.html" class="btn-ghost">Sign In</a>
+      <a href="contact.html" class="btn-primary">Get Started</a>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Home</a>
+  <a href="articles.html">Articles</a>
+  <a href="categories.html">Categories</a>
+  <a href="resources.html">Resources</a>
+  <a href="about.html">About</a>
+  <a href="contact.html" class="active">Contact</a>
+  <a href="contact.html" class="btn-primary" style="text-align:center;margin-top:12px;">Get Started</a>
+</div>
+
+<section class="page-hero">
+  <div class="container">
+    <div class="eyebrow" style="justify-content:center;">GET IN TOUCH</div>
+    <h1>Let's talk <span>shop.</span></h1>
+    <p>Questions, pitches, corrections, or just want to say hi — this goes straight to a real person, not a ticket queue.</p>
+  </div>
+</section>
+
+<section class="section reveal">
+  <div class="container">
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-icon" style="background:linear-gradient(135deg,#6C4DF6,#A855F7);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg></div>
+        <h4>Email us</h4>
+        <p>For general questions or feedback.</p>
+        <a href="mailto:hello@thecodingledger.example">hello@thecodingledger.example</a>
+      </div>
+      <div class="info-card">
+        <div class="info-icon" style="background:linear-gradient(135deg,#3b82f6,#A855F7);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <h4>Response time</h4>
+        <p>We read everything and reply personally.</p>
+        <a href="#contactForm">Usually within 2 business days</a>
+      </div>
+      <div class="info-card">
+        <div class="info-icon" style="background:linear-gradient(135deg,#22c55e,#A855F7);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h4>Guest writing</h4>
+        <p>Pitching an article? Use the About page.</p>
+        <a href="about.html">Go to About →</a>
+      </div>
+    </div>
+
+    <div class="contact-grid" id="contactForm">
+      <div class="form-card">
+        <h3>Send a message</h3>
+        <p>Fill this out and we'll get back to you at the email you provide.</p>
+        <form id="contactFormEl" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="cName">Name</label>
+              <input type="text" id="cName" placeholder="Jane Developer">
+              <div class="field-error" id="errName"></div>
+            </div>
+            <div class="form-group">
+              <label for="cEmail">Email</label>
+              <input type="email" id="cEmail" placeholder="jane@example.com">
+              <div class="field-error" id="errEmail"></div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group full">
+              <label for="cSubject">What's this about?</label>
+              <select id="cSubject">
+                <option value="">Select a topic</option>
+                <option value="General question">General question</option>
+                <option value="Article pitch">Article pitch</option>
+                <option value="Correction / typo">Correction or typo</option>
+                <option value="Partnership">Partnership</option>
+                <option value="Other">Other</option>
+              </select>
+              <div class="field-error" id="errSubject"></div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group full">
+              <label for="cMessage">Message</label>
+              <textarea id="cMessage" placeholder="What's on your mind?"></textarea>
+              <div class="field-error" id="errMessage"></div>
+            </div>
+          </div>
+          <button type="submit" class="submit-btn" id="submitBtn">Send message</button>
+        </form>
+      </div>
+
+      <div class="side-panel">
+        <div class="side-card">
+          <h4>Response hours</h4>
+          <div class="hours-row"><span>Monday – Friday</span><span>9am – 6pm</span></div>
+          <div class="hours-row"><span>Saturday</span><span>10am – 2pm</span></div>
+          <div class="hours-row"><span>Sunday</span><span>Closed</span></div>
+        </div>
+        <div class="side-card gradient">
+          <h4>Follow along</h4>
+          <p>Faster than email for quick questions — we're active here daily.</p>
+          <div class="side-social">
+            <a href="#" aria-label="Twitter"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a>
+            <a href="#" aria-label="GitHub"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.98 5.24.98 11.52c0 4.84 3.14 8.94 7.49 10.39.55.1.75-.24.75-.53v-2.06c-3.05.67-3.69-1.31-3.69-1.31-.5-1.27-1.22-1.6-1.22-1.6-1-.68.08-.67.08-.67 1.1.08 1.68 1.13 1.68 1.13.98 1.68 2.57 1.2 3.2.91.1-.71.39-1.2.7-1.47-2.43-.28-5-1.22-5-5.41 0-1.19.43-2.17 1.13-2.93-.11-.28-.49-1.4.11-2.92 0 0 .92-.3 3.02 1.12a10.5 10.5 0 0 1 5.5 0c2.1-1.42 3.02-1.12 3.02-1.12.6 1.52.22 2.64.11 2.92.7.76 1.13 1.74 1.13 2.93 0 4.2-2.57 5.13-5.02 5.4.4.35.75 1.03.75 2.08v3.08c0 .29.2.64.76.53A11.03 11.03 0 0 0 23.02 11.5C23.02 5.24 18.27.5 12 .5z"/></svg></a>
+            <a href="#" aria-label="LinkedIn"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5C4.98 4.88 3.86 6 2.48 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8.25h4V23h-4V8.25zM8.5 8.25h3.83v2.02h.05c.53-1 1.85-2.06 3.8-2.06 4.06 0 4.82 2.67 4.82 6.14V23h-4v-6.78c0-1.62-.03-3.7-2.25-3.7-2.26 0-2.6 1.76-2.6 3.58V23h-4V8.25z"/></svg></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section reveal">
+  <div class="container">
+    <div class="section-head"><h2>Before you write in…</h2></div>
+    <div class="faq-grid" id="faq-grid"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="footer-logo"><span class="logo-mark">{ }</span>The Coding Ledger</div>
+        <p>A platform dedicated to helping developers level up their skills through in-depth tutorials, real-world projects, and practical insights.</p>
+        <div class="socials">
+          <a href="#" aria-label="Twitter"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a>
+          <a href="#" aria-label="GitHub"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.98 5.24.98 11.52c0 4.84 3.14 8.94 7.49 10.39.55.1.75-.24.75-.53v-2.06c-3.05.67-3.69-1.31-3.69-1.31-.5-1.27-1.22-1.6-1.22-1.6-1-.68.08-.67.08-.67 1.1.08 1.68 1.13 1.68 1.13.98 1.68 2.57 1.2 3.2.91.1-.71.39-1.2.7-1.47-2.43-.28-5-1.22-5-5.41 0-1.19.43-2.17 1.13-2.93-.11-.28-.49-1.4.11-2.92 0 0 .92-.3 3.02 1.12a10.5 10.5 0 0 1 5.5 0c2.1-1.42 3.02-1.12 3.02-1.12.6 1.52.22 2.64.11 2.92.7.76 1.13 1.74 1.13 2.93 0 4.2-2.57 5.13-5.02 5.4.4.35.75 1.03.75 2.08v3.08c0 .29.2.64.76.53A11.03 11.03 0 0 0 23.02 11.5C23.02 5.24 18.27.5 12 .5z"/></svg></a>
+          <a href="#" aria-label="LinkedIn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5C4.98 4.88 3.86 6 2.48 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8.25h4V23h-4V8.25zM8.5 8.25h3.83v2.02h.05c.53-1 1.85-2.06 3.8-2.06 4.06 0 4.82 2.67 4.82 6.14V23h-4v-6.78c0-1.62-.03-3.7-2.25-3.7-2.26 0-2.6 1.76-2.6 3.58V23h-4V8.25z"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col"><h5>Quick Links</h5><ul><li><a href="index.html">Home</a></li><li><a href="articles.html">Articles</a></li><li><a href="categories.html">Categories</a></li><li><a href="resources.html">Resources</a></li><li><a href="about.html">About Us</a></li><li><a href="contact.html">Contact</a></li></ul></div>
+      <div class="footer-col"><h5>Categories</h5><ul><li><a href="categories.html">Frontend</a></li><li><a href="categories.html">Backend</a></li><li><a href="categories.html">DevOps</a></li><li><a href="categories.html">Databases</a></li><li><a href="categories.html">AI &amp; ML</a></li><li><a href="categories.html">Career</a></li></ul></div>
+      <div class="footer-col">
+        <h5>Newsletter</h5><p>Get the best content straight to your inbox.</p>
+        <div class="footer-news"><input type="email" placeholder="Enter your email" id="footerNewsletter"><button aria-label="Subscribe" onclick="handleFooterNewsletter()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2024 The Coding Ledger. All rights reserved.</span><span><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></span></div>
+  </div>
+</footer>
+
+<script>
+function showToast(message, type = 'info') {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  const icons = { success: '✅', info: 'ℹ️', error: '❌' };
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `<span>${icons[type] || 'ℹ️'}</span> ${message}`;
+  container.appendChild(toast);
+  setTimeout(() => { toast.style.animation = 'slideOut 0.4s ease forwards'; setTimeout(() => toast.remove(), 400); }, 3000);
+}
+const header = document.getElementById('header');
+window.addEventListener('scroll', () => {
+  header.classList.toggle('scrolled', window.scrollY > 30);
+  document.getElementById('scrollTop').classList.toggle('visible', window.scrollY > 500);
+});
+document.getElementById('scrollTop').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+const darkToggle = document.getElementById('darkToggle');
+let darkMode = localStorage.getItem('darkMode') === 'true';
+function setDarkMode(enabled){
+  darkMode = enabled;
+  document.documentElement.setAttribute('data-theme', enabled ? 'dark' : 'light');
+  localStorage.setItem('darkMode', enabled);
+  darkToggle.innerHTML = enabled
+    ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707"/><circle cx="12" cy="12" r="5"/></svg>'
+    : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+}
+setDarkMode(darkMode);
+darkToggle.addEventListener('click', () => setDarkMode(!darkMode));
+
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('active');
+  mobileMenu.classList.toggle('active');
+  document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+});
+document.querySelectorAll('.mobile-menu a').forEach(link => link.addEventListener('click', () => {
+  hamburger.classList.remove('active'); mobileMenu.classList.remove('active'); document.body.style.overflow = '';
+}));
+document.getElementById('searchBtn').addEventListener('click', () => { window.location.href = 'articles.html'; });
+function handleFooterNewsletter(){
+  const input = document.getElementById('footerNewsletter');
+  if (input.value) { showToast(`🎉 Subscribed with ${input.value}!`, 'success'); input.value = ''; }
+}
+
+// ============================================================
+// CONTACT FORM VALIDATION
+// ============================================================
+const form = document.getElementById('contactFormEl');
+const submitBtn = document.getElementById('submitBtn');
+function setError(id, msg){ document.getElementById(id).textContent = msg || ''; }
+function validEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  let valid = true;
+  const name = document.getElementById('cName').value.trim();
+  const email = document.getElementById('cEmail').value.trim();
+  const subject = document.getElementById('cSubject').value;
+  const message = document.getElementById('cMessage').value.trim();
+
+  if (!name) { setError('errName', 'Please enter your name'); valid = false; } else setError('errName', '');
+  if (!validEmail(email)) { setError('errEmail', 'Enter a valid email'); valid = false; } else setError('errEmail', '');
+  if (!subject) { setError('errSubject', 'Pick a topic'); valid = false; } else setError('errSubject', '');
+  if (message.length < 10) { setError('errMessage', 'Message should be at least 10 characters'); valid = false; } else setError('errMessage', '');
+
+  if (!valid) { showToast('Please fix the highlighted fields', 'error'); return; }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Sending…';
+  setTimeout(() => {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Send message';
+    showToast(`✅ Thanks ${name.split(' ')[0]}! We'll reply to ${email} soon.`, 'success');
+    form.reset();
+  }, 1000);
+});
+
+// FAQ
+const faqs = [
+  { q: 'How long until I hear back?', a: 'Usually within 2 business days. Article pitches can take a little longer since an editor reviews each one.' },
+  { q: 'Do you accept guest posts?', a: 'Yes — check the About page for what we look for, then send a pitch through this form or that page.' },
+  { q: 'Found a typo or bug in an article?', a: 'Select "Correction / typo" as the topic and include the article title and a link if you have it.' },
+  { q: 'Can I advertise or sponsor a newsletter issue?', a: 'Select "Partnership" and tell us a bit about what you have in mind.' },
+];
+document.getElementById('faq-grid').innerHTML = faqs.map((f) => `
+  <div class="faq-item">
+    <div class="faq-q">${f.q} <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+    <div class="faq-a">${f.a}</div>
+  </div>
+`).join('');
+document.querySelectorAll('.faq-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!wasOpen) item.classList.add('open');
+  });
+});
+
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold: .12 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') { mobileMenu.classList.remove('active'); hamburger.classList.remove('active'); document.body.style.overflow = ''; }
+});
+</script>
+</body>
+</html>
