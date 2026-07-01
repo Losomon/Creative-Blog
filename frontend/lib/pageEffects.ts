@@ -1,11 +1,3 @@
-export type ToastType = "success" | "info" | "error";
-
-export interface Toast {
-  id: number;
-  message: string;
-  type: ToastType;
-}
-
 export interface Category {
   name: string;
   count: string;
