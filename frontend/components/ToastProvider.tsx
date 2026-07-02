@@ -1,8 +1,8 @@
 "use client";
 
 import { createContext, useContext, useState, useCallback, ReactNode } from "react";
-
-type ToastType = "success" | "info" | "error";
+import type { ToastType } from "@/lib/types";
+import styles from "@/styles/home.module.css";
 
 interface Toast {
   id: number;
@@ -15,6 +15,12 @@ interface ToastContextValue {
 }
 
 const ToastContext = createContext<ToastContextValue | null>(null);
+
+const ICONS: Record<ToastType, string> = {
+  success: "✅",
+  info: "ℹ️",
+  error: "❌",
+};
 
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
@@ -30,9 +36,10 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
-      <div className="toast-container">
+      <div className={styles.toastContainer}>
         {toasts.map((toast) => (
-          <div key={toast.id} className={`toast ${toast.type}`}>
+          <div key={toast.id} className={`${styles.toast} ${styles[toast.type]}`}>
+            <span>{ICONS[toast.type]}</span>
             {toast.message}
           </div>
         ))}

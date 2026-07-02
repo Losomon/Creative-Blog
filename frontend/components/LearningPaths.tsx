@@ -1,77 +1,57 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { motion } from "framer-motion";
-import { learningPaths } from "@/lib/data";
+import { LEARNING_PATHS } from "@/lib/data";
+import styles from "@/styles/home.module.css";
 
 export default function LearningPaths() {
   return (
-    <section className="mx-auto max-w-7xl px-6 py-20">
-      <div className="mb-10 text-center">
-        <span className="text-sm font-semibold text-brand-600">LEARNING PATHS</span>
-        <h2 className="mt-1 text-3xl font-bold text-gray-900 dark:text-white md:text-4xl">
-          Structured Roadmaps
-        </h2>
-        <p className="mt-3 text-gray-600 dark:text-gray-400">
-          Follow our carefully crafted learning paths to become the developer you want to be.
-        </p>
-      </div>
-
-      <div className="grid gap-8 md:grid-cols-3">
-        {learningPaths.map((path, i) => (
-          <motion.div
-            key={path.title}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.1 }}
-            className="relative overflow-hidden rounded-3xl border border-border bg-card p-8 shadow-sm transition-shadow duration-300 hover:shadow-xl"
-          >
-            <div className="absolute -inset-[1px] rounded-3xl bg-gradient-to-br from-brand-500 to-brand-300 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-            <div className="relative z-10">
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
-                {path.title}
-              </h3>
-
-              <div className="space-y-4">
-                {path.steps.map((step, j) => (
-                  <div key={step} className="flex items-center gap-4">
-                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-brand-50 font-bold text-brand-700 dark:bg-brand-900/30 dark:text-brand-300">
-                      {j + 1}
+    <section className={`${styles.section} ${styles.reveal}`}>
+      <div className="container">
+        <div className={styles.sectionHead}>
+          <div>
+            <h2>Learning Paths</h2>
+            <p>Follow structured roadmaps to your goal</p>
+          </div>
+          <Link href="#" className={styles.viewAll}>
+            View all paths
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </Link>
+        </div>
+        <div className={styles.pathGrid}>
+          {LEARNING_PATHS.map((path) => (
+            <div key={path.title} className={styles.pathCard}>
+              <div className={styles.pathHead}>
+                <div>
+                  <h3>{path.title}</h3>
+                  <div className={styles.pathMeta}>{path.meta}</div>
+                </div>
+              </div>
+              <div className={styles.roadmap}>
+                {path.steps.map((step, i) => (
+                  <span key={step.label} style={{ display: "contents" }}>
+                    <div className={styles.roadStep}>
+                      <span className={styles.ico} style={{ background: step.color, color: step.textColor ?? "#fff" }}>
+                        {step.icon}
+                      </span>
+                      {step.label}
                     </div>
-                    <span className="flex-1 font-medium text-gray-700 dark:text-gray-200">
-                      {step}
-                    </span>
-                    {j < path.steps.length - 1 && (
-                      <ArrowRight className="h-4 w-4 text-gray-400" />
-                    )}
-                  </div>
+                    {i < path.steps.length - 1 && <span className={styles.roadArrow}>→</span>}
+                  </span>
                 ))}
               </div>
-
-              <div className="mt-8">
-                <div className="h-2 w-full rounded-full bg-gray-100 dark:bg-gray-800">
-                  <div
-                    className="h-2 rounded-full bg-gradient-to-r from-brand-500 to-brand-400"
-                    style={{ width: `${path.progress}%` }}
-                  />
+              <div className={styles.progressRow}>
+                <div className={styles.progressBar}>
+                  <div className={styles.progressFill} style={{ width: `${path.progress}%` }} />
                 </div>
-                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                  {path.progress}% complete
-                </p>
+                <span>{path.progress}%</span>
               </div>
-
-              <Link
-                href={`/paths/${path.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`}
-                className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-brand-600 hover:text-brand-700"
-              >
-                Start Learning
-                <ArrowRight className="h-4 w-4" />
-              </Link>
             </div>
-          </motion.div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );

@@ -1,67 +1,40 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, HelpCircle } from "lucide-react";
-import { faqs } from "@/lib/data";
+import { FAQS } from "@/lib/data";
+import styles from "@/styles/home.module.css";
 
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
-  return (
-    <section className="mx-auto max-w-3xl px-6 py-20">
-      <div className="mb-10 text-center">
-        <span className="text-sm font-semibold text-brand-600">FAQ</span>
-        <h2 className="mt-1 text-3xl font-bold text-gray-900 dark:text-white md:text-4xl">
-          Frequently Asked Questions
-        </h2>
-      </div>
+  const toggle = (index: number) => {
+    setOpenIndex((prev) => (prev === index ? null : index));
+  };
 
-      <div className="space-y-4">
-        {faqs.map((faq, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.1 }}
-            className="rounded-2xl border border-border bg-card transition-shadow hover:shadow-lg"
-          >
-            <button
-              onClick={() => setOpenIndex(openIndex === i ? null : i)}
-              className="flex w-full items-center justify-between p-6 text-left"
+  return (
+    <section className={`${styles.section} ${styles.reveal}`}>
+      <div className="container">
+        <div className={styles.sectionHead}>
+          <h2>Frequently Asked Questions</h2>
+        </div>
+        <div className={styles.faqGrid}>
+          {FAQS.map((faq, i) => (
+            <div
+              key={faq.q}
+              className={`${styles.faqItem} ${openIndex === i ? styles.open : ""}`}
+              onClick={() => toggle(i)}
             >
-              <div className="flex items-center gap-3">
-                <HelpCircle className="h-5 w-5 text-brand-600" />
-                <span className="font-semibold text-gray-900 dark:text-white">
-                  {faq.question}
-                </span>
+              <div className={styles.faqQ}>
+                {faq.q}
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
               </div>
-              <motion.div
-                animate={{ rotate: openIndex === i ? 180 : 0 }}
-                transition={{ duration: 0.2 }}
-                className="text-gray-400"
-              >
-                <ChevronDown className="h-5 w-5" />
-              </motion.div>
-            </button>
-            <AnimatePresence>
-              {openIndex === i && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="overflow-hidden px-6 pb-6"
-                >
-                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                    {faq.answer}
-                  </p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
-        ))}
+              <div className={styles.faqA}>{faq.a}</div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
