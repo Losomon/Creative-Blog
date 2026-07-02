@@ -1,84 +1,83 @@
 "use client";
 
 import Link from "next/link";
-import { Clock, Bookmark } from "lucide-react";
-import { motion } from "framer-motion";
-import { trendingArticles as articles } from "@/lib/data";
+import { TRENDING_ARTICLES } from "@/lib/data";
+import { useToast } from "@/components/ToastProvider";
+import styles from "@/styles/home.module.css";
+
+function TrendCard({
+  article,
+}: {
+  article: (typeof TRENDING_ARTICLES)[number];
+}) {
+  const { showToast } = useToast();
+  const spanClass = article.span === "2-2" ? styles.span22 : styles.span11;
+
+  const onEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!article.hoverVideo) return;
+    const video = e.currentTarget.querySelector("video");
+    if (video) {
+      video.currentTime = 0;
+      video.play().catch(() => {});
+    }
+  };
+
+  const onLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+    const video = e.currentTarget.querySelector("video");
+    video?.pause();
+  };
+
+  return (
+    <div
+      className={`${styles.trendCard} ${spanClass} ${article.hoverVideo ? styles.hoverVideo : ""}`}
+      style={{ background: "#1a1235" }}
+      onClick={() => showToast(`Article: ${article.title}`, "info")}
+      onMouseEnter={onEnter}
+      onMouseLeave={onLeave}
+    >
+      <img className={styles.tImg} src={article.image} alt={article.title} loading="lazy" />
+      {article.video && (
+        <video className={styles.tVideo} muted loop playsInline preload="none">
+          <source src={article.video} type="video/mp4" />
+        </video>
+      )}
+      <div className={styles.tOverlay} />
+      <div className={styles.bookmark}>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+        </svg>
+      </div>
+      <div className={styles.tContent}>
+        <span className={styles.tCat}>{article.category}</span>
+        <div className={styles.tTitle}>{article.title}</div>
+        <div className={styles.tMeta}>{article.meta}</div>
+      </div>
+    </div>
+  );
+}
 
 export default function TrendingArticles() {
   return (
-    <section className="mx-auto max-w-7xl px-6 py-20">
-      <div className="mb-10 flex items-center justify-between">
-        <div>
-          <span className="text-sm font-semibold text-brand-600">TRENDING</span>
-          <h2 className="mt-1 text-3xl font-bold text-gray-900 dark:text-white md:text-4xl">
-            What&apos;s Hot
-          </h2>
+    <section className={`${styles.section} ${styles.reveal}`} id="trending">
+      <div className="container">
+        <div className={styles.sectionHead}>
+          <div>
+            <h2>Trending Articles</h2>
+            <p>What developers are reading right now</p>
+          </div>
+          <Link href="/articles" className={styles.viewAll}>
+            View all articles
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </Link>
         </div>
-        <Link
-          href="/articles"
-          className="text-sm font-medium text-brand-600 hover:text-brand-700"
-        >
-          View all →
-        </Link>
-      </div>
-
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 lg:auto-rows-[280px]">
-        {articles.map((article, i) => {
-          const isFeatured = i === 0;
-          const isLarge = i === 3;
-
-          return (
-            <motion.div
-              key={article.slug}
-              whileHover={{ y: -4 }}
-              className={`group relative rounded-2xl ${
-                isFeatured
-                  ? "lg:col-span-2 lg:row-span-2"
-                  : isLarge
-                  ? "lg:col-span-2"
-                  : ""
-              }`}
-            >
-              <div className="absolute -inset-[1px] rounded-2xl bg-gradient-to-br from-brand-500 to-brand-300 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              <div className="relative h-full rounded-2xl border border-border bg-card shadow-sm transition-shadow duration-300 group-hover:shadow-xl">
-                {/* Image */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-gray-800 to-brand-900" />
-
-                {/* Bottom gradient for text readability */}
-                <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/70 to-transparent" />
-
-                {/* Bookmark */}
-                <button className="absolute right-4 top-4 rounded-full bg-white/20 p-2 text-white backdrop-blur-sm opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                  <Bookmark className="h-4 w-4" />
-                </button>
-
-                {/* Content */}
-                <div className="relative flex h-full flex-col justify-end p-6">
-                  <span className="mb-3 inline-block w-fit rounded-full bg-brand-500/20 px-3 py-1 text-xs font-medium text-brand-200 backdrop-blur-sm">
-                    {article.category}
-                  </span>
-                  <h3 className="mb-2 text-lg font-bold leading-tight text-white md:text-xl">
-                    {article.title}
-                  </h3>
-                  <div className="flex items-center gap-3 text-sm text-gray-300">
-                    <span className="flex items-center gap-1">
-                      <Clock className="h-3.5 w-3.5" />
-                      {article.readTime} min
-                    </span>
-                    <span>·</span>
-                    <span>{article.date}</span>
-                  </div>
-                </div>
-
-                <Link
-                  href={`/articles/${article.slug}`}
-                  className="absolute inset-0 z-10"
-                />
-              </div>
-            </motion.div>
-          );
-        })}
+        <div className={styles.trendGrid}>
+          {TRENDING_ARTICLES.map((article) => (
+            <TrendCard key={article.title} article={article} />
+          ))}
+        </div>
       </div>
     </section>
   );

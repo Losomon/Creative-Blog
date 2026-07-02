@@ -1,327 +1,212 @@
-export type Article = {
-  slug: string;
-  title: string;
-  category: string;
-  excerpt: string;
-  readTime: number;
-  date: string;
-  image: string;
-  author?: string;
-  views?: string;
+import type {
+  Category,
+  FAQ,
+  FeaturedArticleData,
+  LearningPath,
+  NavLink,
+  Resource,
+  StatItem,
+  Testimonial,
+  TrendingArticle,
+  Tutorial,
+} from "./types";
+
+export const NAV_LINKS: NavLink[] = [
+  { href: "/", label: "Home" },
+  { href: "/articles", label: "Articles" },
+  { href: "/categories", label: "Categories" },
+  { href: "/resources", label: "Resources" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+];
+
+export const TYPING_WORDS = [
+  "developers",
+  "engineers",
+  "creators",
+  "innovators",
+  "problem solvers",
+] as const;
+
+export const STATS: StatItem[] = [
+  { label: "Tutorials", sub: "In-depth guides", value: 120, suffix: "+" },
+  { label: "Projects", sub: "Real-world projects", value: 50, suffix: "+" },
+  { label: "Subscribers", sub: "Growing community", value: 15, suffix: "K" },
+  { label: "Monthly Readers", sub: "Across the globe", value: 500, suffix: "K" },
+];
+
+export const FEATURED_ARTICLE: FeaturedArticleData = {
+  title: "How I Built a Scalable Blog Platform with Next.js",
+  excerpt:
+    "A behind-the-scenes look at the architecture, features, and lessons learned while building The Coding Ledger from the ground up.",
+  author: "Solomon Mboni",
+  authorImage: "https://i.pravatar.cc/72?img=51",
+  meta: "May 20, 2024 · 12 min read",
+  image: "https://picsum.photos/id/180/900/700",
+  video: "https://assets.mixkit.co/videos/41659/41659-720.mp4",
 };
 
-export const trendingArticles: Article[] = [
+export const TRENDING_ARTICLES: TrendingArticle[] = [
   {
-    slug: "rest-api-nodejs-express",
     title: "Building a REST API with Node.js & Express",
     category: "Web Development",
-    excerpt: "A comprehensive guide to building scalable REST APIs using Node.js and Express.js with best practices for production.",
-    readTime: 8,
-    date: "May 18, 2024",
-    image: "/images/article-1.jpg",
-    author: "Alex Chen",
-    views: "12.4k",
+    meta: "10 min read · May 18, 2024 · hover to preview",
+    image: "https://picsum.photos/id/119/700/500",
+    video: "https://assets.mixkit.co/videos/41646/41646-720.mp4",
+    span: "2-2",
+    hoverVideo: true,
   },
   {
-    slug: "designing-dashboard-users-love",
     title: "Designing a Dashboard Users Love",
-    category: "UI / UX Design",
-    excerpt: "Learn the principles behind creating intuitive, beautiful dashboards that users actually enjoy interacting with.",
-    readTime: 10,
-    date: "May 17, 2024",
-    image: "/images/article-2.jpg",
-    author: "Sarah Miller",
-    views: "9.8k",
+    category: "UI/UX Design",
+    meta: "9 min read · May 17, 2024",
+    image: "https://picsum.photos/id/48/500/500",
+    span: "1-1",
   },
   {
-    slug: "state-management-react-explained",
     title: "State Management in React Explained",
     category: "React",
-    excerpt: "From useState to Zustand: when to use which state management solution in your React applications.",
-    readTime: 9,
-    date: "May 15, 2024",
-    image: "/images/article-3.jpg",
-    author: "David Kim",
-    views: "15.2k",
+    meta: "8 min read · May 15, 2024",
+    image: "https://picsum.photos/id/180/500/500",
+    span: "1-1",
   },
   {
-    slug: "fullstack-docker-render",
     title: "Deploying a Full-Stack App with Docker & Render",
     category: "DevOps",
-    excerpt: "Step-by-step guide to containerizing and deploying your full-stack application with Docker and Render.",
-    readTime: 11,
-    date: "May 14, 2024",
-    image: "/images/article-4.jpg",
-    author: "Maria Garcia",
-    views: "8.1k",
+    meta: "11 min read · May 14, 2024",
+    image: "https://picsum.photos/id/1/500/500",
+    span: "1-1",
+  },
+  {
+    title: "MongoDB Aggregation Pipeline Explained",
+    category: "Databases",
+    meta: "9 min read · May 13, 2024",
+    image: "https://picsum.photos/id/60/500/500",
+    span: "1-1",
   },
 ];
 
-export const featuredArticle: Article = {
-  slug: "future-of-web-development-2025",
-  title: "The Future of Web Development in 2025",
-  category: "Web Development",
-  excerpt:
-    "Explore the cutting-edge technologies and trends that will shape the web development landscape in the coming year. From AI-assisted coding to edge computing.",
-  readTime: 12,
-  date: "May 20, 2024",
-  image: "/images/featured.jpg",
-  author: "Alex Chen",
-  views: "24.6k",
-};
-
-export const categories = [
-  {
-    name: "Frontend",
-    icon: "LayoutTemplate",
-    count: 42,
-    color: "from-blue-500 to-cyan-500",
-    colorHex: "#3b82f6",
-  },
-  {
-    name: "React",
-    icon: "Atom",
-    count: 38,
-    color: "from-cyan-500 to-teal-500",
-    colorHex: "#06b6d4",
-  },
-  {
-    name: "Node.js",
-    icon: "Server",
-    count: 31,
-    color: "from-green-500 to-emerald-500",
-    colorHex: "#22c55e",
-  },
-  {
-    name: "Backend",
-    icon: "Database",
-    count: 28,
-    color: "from-orange-500 to-amber-500",
-    colorHex: "#f97316",
-  },
-  {
-    name: "AI",
-    icon: "Brain",
-    count: 24,
-    color: "from-purple-500 to-brand-600",
-    colorHex: "#a855f7",
-  },
-  {
-    name: "Cloud",
-    icon: "Cloud",
-    count: 19,
-    color: "from-sky-500 to-blue-500",
-    colorHex: "#0ea5e9",
-  },
-  {
-    name: "DevOps",
-    icon: "GitBranch",
-    count: 16,
-    color: "from-red-500 to-rose-500",
-    colorHex: "#ef4444",
-  },
-  {
-    name: "Design",
-    icon: "Palette",
-    count: 22,
-    color: "from-pink-500 to-rose-500",
-    colorHex: "#ec4899",
-  },
-  {
-    name: "Career",
-    icon: "Briefcase",
-    count: 14,
-    color: "from-yellow-500 to-orange-500",
-    colorHex: "#eab308",
-  },
-  {
-    name: "Databases",
-    icon: "HardDrive",
-    count: 12,
-    color: "from-indigo-500 to-purple-500",
-    colorHex: "#6366f1",
-  },
+export const CATEGORIES: Category[] = [
+  { name: "Frontend", count: "126 articles", icon: "🎨", color: "#6C4DF6" },
+  { name: "React", count: "86 articles", icon: "⚛", color: "#61DAFB" },
+  { name: "Node.js", count: "74 articles", icon: "⬡", color: "#3c873a" },
+  { name: "Backend", count: "92 articles", icon: "🗄", color: "#8B5CF6" },
+  { name: "AI & ML", count: "48 articles", icon: "🧠", color: "#A855F7" },
+  { name: "DevOps", count: "52 articles", icon: "☁", color: "#3b82f6" },
+  { name: "Career", count: "36 articles", icon: "💼", color: "#f59e0b" },
+  { name: "Databases", count: "47 articles", icon: "🗃", color: "#6C4DF6" },
 ];
 
-export const learningPaths = [
+export const LEARNING_PATHS: LearningPath[] = [
   {
     title: "Become a Frontend Developer",
-    steps: ["HTML", "CSS", "JavaScript", "React", "Next.js"],
-    progress: 60,
-  },
-  {
-    title: "Become a Fullstack Developer",
-    steps: ["Node.js", "Express", "MongoDB", "Authentication", "Deployment"],
-    progress: 40,
-  },
-  {
-    title: "Become a DevOps Engineer",
-    steps: ["Linux", "Docker", "CI/CD", "Kubernetes", "Cloud"],
+    meta: "12 Modules · Beginner to Advanced",
     progress: 25,
+    steps: [
+      { label: "HTML", icon: "H", color: "#e34c26" },
+      { label: "CSS", icon: "C", color: "#264de4" },
+      { label: "JavaScript", icon: "JS", color: "#f0db4f", textColor: "#222" },
+      { label: "React", icon: "⚛", color: "#20232a" },
+      { label: "Next.js", icon: "N", color: "#000" },
+    ],
+  },
+  {
+    title: "Backend Developer Roadmap",
+    meta: "10 Modules · Beginner to Advanced",
+    progress: 30,
+    steps: [
+      { label: "Node", icon: "N", color: "#3c873a" },
+      { label: "Express", icon: "E", color: "#000" },
+      { label: "MongoDB", icon: "M", color: "#13aa52" },
+      { label: "Auth", icon: "A", color: "#6C4DF6" },
+      { label: "Deployment", icon: "D", color: "#3b82f6" },
+    ],
   },
 ];
 
-export const latestTutorials: Article[] = [
+export const TUTORIALS: Tutorial[] = [
   {
-    slug: "mastering-typescript-generics",
-    title: "Mastering TypeScript Generics",
-    category: "TypeScript",
-    excerpt: "Deep dive into TypeScript generics with practical examples and patterns.",
-    readTime: 8,
-    date: "May 19, 2024",
-    image: "/images/tut-1.jpg",
-    author: "James Wilson",
-    views: "18.5k",
+    tag: "JavaScript",
+    title: "Top 10 JavaScript Array Methods",
+    time: "7 min read",
+    views: "2.1K views",
+    author: "https://i.pravatar.cc/40?img=5",
+    image: "https://picsum.photos/id/119/400/300",
   },
   {
-    slug: "css-grid-mastery",
-    title: "CSS Grid Layout: The Complete Guide",
-    category: "CSS",
-    excerpt: "Everything you need to know about CSS Grid Layout in 2024.",
-    readTime: 14,
-    date: "May 18, 2024",
-    image: "/images/tut-2.jpg",
-    author: "Emily Brown",
-    views: "14.2k",
+    tag: "Tailwind CSS",
+    title: "Build a Modern Landing Page",
+    time: "12 min read",
+    views: "3.8K views",
+    author: "https://i.pravatar.cc/40?img=8",
+    image: "https://picsum.photos/id/48/400/300",
   },
   {
-    slug: "nextjs-app-router-guide",
-    title: "Next.js App Router: The Ultimate Guide",
-    category: "Next.js",
-    excerpt: "Comprehensive guide to Next.js 14 App Router with server components.",
-    readTime: 16,
-    date: "May 17, 2024",
-    image: "/images/tut-3.jpg",
-    author: "Michael Lee",
-    views: "21.7k",
+    tag: "React",
+    title: "React Hooks Complete Guide",
+    time: "15 min read",
+    views: "4.5K views",
+    author: "https://i.pravatar.cc/40?img=22",
+    image: "https://picsum.photos/id/180/400/300",
   },
   {
-    slug: "docker-for-developers",
-    title: "Docker for Developers: From Zero to Hero",
-    category: "DevOps",
-    excerpt: "Learn Docker fundamentals and containerize your applications.",
-    readTime: 11,
-    date: "May 16, 2024",
-    image: "/images/tut-4.jpg",
-    author: "Chris Taylor",
-    views: "11.3k",
+    tag: "TypeScript",
+    title: "Why TypeScript Makes You Better",
+    time: "10 min read",
+    views: "2.9K views",
+    author: "https://i.pravatar.cc/40?img=14",
+    image: "https://picsum.photos/id/60/400/300",
   },
   {
-    slug: "tailwind-v4-new-features",
-    title: "Tailwind CSS v4: What's New",
-    category: "CSS",
-    excerpt: "Explore the new features and improvements in Tailwind CSS v4.",
-    readTime: 7,
-    date: "May 15, 2024",
-    image: "/images/tut-5.jpg",
-    author: "Anna White",
-    views: "16.9k",
-  },
-  {
-    slug: "prisma-orm-guide",
-    title: "Prisma ORM: The Modern Way to Query Databases",
-    category: "Databases",
-    excerpt: "Learn how Prisma simplifies database access in Node.js applications.",
-    readTime: 10,
-    date: "May 14, 2024",
-    image: "/images/tut-6.jpg",
-    author: "Tom Harris",
-    views: "9.4k",
+    tag: "Next.js",
+    title: "Server Components Explained",
+    time: "11 min read",
+    views: "3.3K views",
+    author: "https://i.pravatar.cc/40?img=19",
+    image: "https://picsum.photos/id/1/400/300",
   },
 ];
 
-export const developerResources = [
+export const RESOURCES: Resource[] = [
+  { icon: "🎁", color: "#6C4DF6", title: "Free UI Kits", desc: "Beautiful UI kits for your next project." },
+  { icon: "⌥", color: "#A855F7", title: "Git Cheat Sheet", desc: "Essential Git commands in one place." },
+  { icon: "🎨", color: "#3b82f6", title: "VS Code Themes", desc: "Best themes to boost your productivity." },
+  { icon: "✦", color: "#8B5CF6", title: "Icons & Illustrations", desc: "Free icons and illustrations for developers." },
+  { icon: "⚒", color: "#22c55e", title: "Open Source Projects", desc: "Curated list of amazing open source projects." },
+];
+
+export const TESTIMONIALS: Testimonial[] = [
   {
-    title: "Free UI Kit",
-    description: "A comprehensive UI component library for rapid prototyping.",
-    icon: "Palette",
-    color: "from-brand-500 to-brand-600",
+    quote: "The Coding Ledger helped me go from confused to confident developer.",
+    name: "Alex Johnson",
+    role: "Frontend Developer",
+    avatar: "https://i.pravatar.cc/72?img=15",
   },
   {
-    title: "Git Cheat Sheet",
-    description: "Essential Git commands every developer should know.",
-    icon: "FileCode",
-    color: "from-orange-500 to-pink-600",
+    quote: "The tutorials are practical, modern, and easy to follow. My go-to blog!",
+    name: "Sarah Williams",
+    role: "Software Engineer",
+    avatar: "https://i.pravatar.cc/72?img=27",
   },
   {
-    title: "VS Code Themes",
-    description: "Curated collection of beautiful VS Code themes.",
-    icon: "Monitor",
-    color: "from-blue-500 to-cyan-600",
+    quote: "I landed my dream job by following the career advice and roadmaps.",
+    name: "David Miller",
+    role: "Full Stack Developer",
+    avatar: "https://i.pravatar.cc/72?img=33",
   },
   {
-    title: "Icon Library",
-    description: "Free, high-quality icons for your next project.",
-    icon: "Smile",
-    color: "from-green-500 to-teal-600",
-  },
-  {
-    title: "Open Source Projects",
-    description: "Top open source projects to contribute to in 2024.",
-    icon: "Github",
-    color: "from-purple-500 to-brand-600",
-  },
-  {
-    title: "Dev Books",
-    description: "Must-read books for modern software developers.",
-    icon: "BookOpen",
-    color: "from-red-500 to-orange-600",
+    quote: "Clean design, great content, and super valuable resources.",
+    name: "Emma Davis",
+    role: "UI/UX Designer",
+    avatar: "https://i.pravatar.cc/72?img=44",
   },
 ];
 
-export const testimonials = [
-  {
-    quote:
-      "The Coding Ledger helped me land my first frontend job. The tutorials are incredibly well-structured and practical.",
-    author: "Sarah Johnson",
-    role: "Frontend Developer @ Company",
-    avatar: "/avatars/sarah.jpg",
-    rating: 5,
-  },
-  {
-    quote:
-      "I've been coding for 5 years, and this is still my go-to resource for staying current with best practices.",
-    author: "Michael Chen",
-    role: "Senior Engineer @ TechCorp",
-    avatar: "/avatars/michael.jpg",
-    rating: 5,
-  },
-  {
-    quote:
-      "The learning paths are game-changing. I went from junior to mid-level developer in just 6 months.",
-    author: "Alex Rivera",
-    role: "Fullstack Developer @ Startup",
-    avatar: "/avatars/alex.jpg",
-    rating: 5,
-  },
-];
-
-export const faqs = [
-  {
-    question: "How often do you publish new articles?",
-    answer:
-      "We publish 3-5 new articles every week, covering everything from beginner tutorials to advanced engineering concepts. Our team of experienced developers ensures every piece is accurate, practical, and up-to-date with current industry standards.",
-  },
-  {
-    question: "Are the tutorials and resources really free?",
-    answer:
-      "Yes! All our tutorials, articles, and resources are completely free. We also offer a premium subscription with exclusive deep-dives, video courses, and a private community for developers who want to take their skills further.",
-  },
-  {
-    question: "Can I contribute to The Coding Ledger?",
-    answer:
-      "Absolutely! We welcome guest authors and technical contributors. Whether you want to write articles, suggest tutorials, or contribute to our open-source resources, we'd love to have you. Reach out to us through the contact page.",
-  },
-  {
-    question: "How do I join the community?",
-    answer:
-      "Join our community by subscribing to our newsletter, following us on social media, or becoming a premium member. We have active Discord and Slack communities where developers share knowledge, ask questions, and network.",
-  },
-];
-
-export const stats = [
-  { label: "Tutorials", value: 120, suffix: "+" },
-  { label: "Projects", value: 50, suffix: "+" },
-  { label: "Subscribers", value: 15, suffix: "K+" },
-  { label: "Monthly Readers", value: 500, suffix: "K+" },
+export const FAQS: FAQ[] = [
+  { q: "How often do you publish new articles?", a: "We publish 3-4 new tutorials and articles every week, covering frontend, backend, and career topics." },
+  { q: "Are the tutorials completely free?", a: "Yes — all core tutorials are free. We also offer optional premium deep-dives for subscribers." },
+  { q: "Can I contribute to The Coding Ledger?", a: "Absolutely. We welcome guest writers — reach out via the Contact page to pitch an article." },
+  { q: "Do you offer premium content?", a: "We do! Premium members get early access, downloadable resources, and exclusive guides." },
+  { q: "How can I stay updated with new content?", a: "Subscribe to our weekly newsletter or follow us on social media for new releases." },
+  { q: "Can I use the code from your tutorials?", a: "Yes, all code snippets are free to use in personal and commercial projects." },
 ];

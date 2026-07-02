@@ -1,17 +1,24 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import { ToastProvider } from "@/components/ToastProvider";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
+const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-sans",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-mono",
 });
 
 export const metadata: Metadata = {
-  title: "The Coding Ledger | Modern Developer Publication",
+  title: "The Coding Ledger — Insights that empower developers",
   description:
-    "In-depth articles, tutorials, and real-world lessons on modern web development, design, and software engineering. Trusted by 12,000+ developers.",
+    "Modern tutorials, real-world projects, career advice, and everything you need to grow in software engineering. Trusted by 12,000+ developers.",
 };
 
 export default function RootLayout({
@@ -20,11 +27,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-background text-foreground transition-colors duration-300">
-        <ToastProvider>
-          {children}
-        </ToastProvider>
+    <html lang="en" className={`${plusJakarta.variable} ${jetbrainsMono.variable}`}>
+      <body>
+        <ToastProvider>{children}</ToastProvider>
       </body>
     </html>
   );
