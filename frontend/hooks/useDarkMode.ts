@@ -1,24 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 export function useDarkMode() {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkModeState] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem("darkMode") === "true";
-    setDarkMode(stored);
+    const stored = window.localStorage.getItem("darkMode") === "true";
+    setDarkModeState(stored);
     document.documentElement.setAttribute("data-theme", stored ? "dark" : "light");
   }, []);
 
-  const toggle = () => {
-    setDarkMode((prev) => {
-      const next = !prev;
-      document.documentElement.setAttribute("data-theme", next ? "dark" : "light");
-      localStorage.setItem("darkMode", String(next));
-      return next;
-    });
-  };
+  const setDarkMode = useCallback((enabled: boolean) => {
+    setDarkModeState(enabled);
+    document.documentElement.setAttribute("data-theme", enabled ? "dark" : "light");
+    window.localStorage.setItem("darkMode", String(enabled));
+  }, []);
 
-  return { darkMode, toggle };
+  return { darkMode, setDarkMode, toggle: () => setDarkMode(!darkMode) };
 }

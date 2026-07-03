@@ -1,29 +1,29 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
-export function useRevealOnScroll(revealClass: string, visibleClass: string) {
-  const containerRef = useRef<HTMLDivElement>(null);
-
+/**
+ * Signature "shutter" motion frame: elements with the `.reveal` class sweep
+ * open via clip-path instead of a plain fade. This hook wires up the
+ * IntersectionObserver that adds `.in` the first time each element scrolls
+ * into view. See globals.css for the actual transition.
+ */
+export function useRevealOnScroll(deps: React.DependencyList = []) {
   useEffect(() => {
-    const root = containerRef.current ?? document;
-    const elements = root.querySelectorAll(`.${revealClass}`);
-
-    const observer = new IntersectionObserver(
+    const els = document.querySelectorAll<HTMLElement>(".reveal:not(.in)");
+    const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add(visibleClass);
-            observer.unobserve(entry.target);
+            entry.target.classList.add("in");
+            io.unobserve(entry.target);
           }
         });
       },
       { threshold: 0.12 }
     );
-
-    elements.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, [revealClass, visibleClass]);
-
-  return containerRef;
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, deps);
 }
