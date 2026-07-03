@@ -1,51 +1,30 @@
-export type ToastType = "success" | "info" | "error";
-
-export interface NavLink {
-  href: string;
-  label: string;
+export interface Article {
+  title: string;
+  desc: string;
+  cat: Category;
+  time: string;
+  views: string;
+  img: string;
+  author: string;
 }
 
-export interface StatItem {
-  label: string;
-  sub: string;
-  value: number;
-  suffix: string;
-}
+export type Category =
+  | "Frontend"
+  | "React"
+  | "Node.js"
+  | "Backend"
+  | "AI & ML"
+  | "DevOps"
+  | "Career"
+  | "Databases";
 
-export interface Category {
-  name: string;
+export interface CategoryInfo {
+  name: Category;
   count: string;
   icon: string;
   color: string;
-}
-
-export interface TrendingArticle {
-  title: string;
-  category: string;
-  meta: string;
-  image: string;
-  video?: string;
-  span: "2-2" | "1-1";
-  hoverVideo?: boolean;
-}
-
-export interface FeaturedArticleData {
-  title: string;
-  excerpt: string;
-  author: string;
-  authorImage: string;
-  meta: string;
-  image: string;
-  video: string;
-}
-
-export interface Tutorial {
-  tag: string;
-  title: string;
-  time: string;
-  views: string;
-  author: string;
-  image: string;
+  img: string;
+  desc: string;
 }
 
 export interface Resource {
@@ -53,30 +32,23 @@ export interface Resource {
   color: string;
   title: string;
   desc: string;
+  badge: string;
 }
 
-export interface LearningPathStep {
-  label: string;
-  icon: string;
-  color: string;
-  textColor?: string;
-}
-
-export interface LearningPath {
-  title: string;
-  meta: string;
-  steps: LearningPathStep[];
-  progress: number;
-}
-
-export interface Testimonial {
-  quote: string;
+export interface TeamMember {
   name: string;
   role: string;
-  avatar: string;
+  img: string;
 }
 
-export interface FAQ {
+export interface Faq {
   q: string;
   a: string;
+}
+
+export interface Stat {
+  count: number;
+  suffix: string;
+  label: string;
+  sub: string;
 }
