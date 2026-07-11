@@ -1,42 +1,27 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
+import "@fontsource/fraunces/400.css";
+import "@fontsource/fraunces/500.css";
+import "@fontsource/fraunces/500-italic.css";
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/500.css";
+import "@fontsource/ibm-plex-mono/400.css";
+import "@fontsource/ibm-plex-mono/500.css";
 import "./globals.css";
-import { ToastProvider } from "@/components/Toast";
-import BackgroundShapes from "@/components/BackgroundShapes";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import ScrollTop from "@/components/ScrollTop";
-
-const jakarta = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-jakarta",
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-mono",
-});
 
 export const metadata: Metadata = {
-  title: "The Coding Ledger — Insights that empower developers",
+  title: "Solo Design — Nothing great gets built by accident.",
   description:
-    "Modern tutorials, real-world projects, career advice, and everything you need to grow in software engineering.",
+    "Essays, case studies, and build logs exploring how thoughtful digital products are designed and built — one deliberate decision at a time.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html lang="en">
-      <body className={`${jakarta.variable} ${jetbrainsMono.variable}`}>
-        <ToastProvider>
-          <BackgroundShapes />
-          <ScrollTop />
-          <Header />
-          {children}
-          <Footer />
-        </ToastProvider>
-      </body>
+      <body className="antialiased">{children}</body>
     </html>
   );
 }
