@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Solo Design — frontend
 
-## Getting Started
+Next.js 14 + TypeScript + Tailwind + React Three Fiber + Framer Motion,
+built the way it was scoped: real HTML/CSS for content, a genuine WebGL
+scene only in the hero.
 
-First, run the development server:
+## Run it
 
 ```bash
+cd frontend
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build   # production build, also the fastest way to catch type errors
+npm run start   # serve the production build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Structure
 
-## Learn More
+```
+src/
+├── app/
+│   ├── layout.tsx      root layout, loads Fraunces/Inter/JetBrains Mono
+│   ├── page.tsx         assembles every section in build order
+│   └── globals.css
+│
+├── components/
+│   ├── layout/           Navbar, Footer
+│   ├── hero/             the 3D hero — see below
+│   ├── journal/          LatestArticle, TopicGrid, FieldNotes
+│   ├── builds/            FeaturedBuild, CaseStudyCard, BuildsSection
+│   └── newsletter/        Newsletter (Weekly Dispatch)
+│
+└── data/                articles.ts, builds.ts, topics.ts — plain typed
+                          arrays; swap for a CMS fetch later without
+                          touching any component markup
+```
 
-To learn more about Next.js, take a look at the following resources:
+## How the hero works
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+`Hero.tsx` is a client component split straight down the middle:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Left: real DOM.** Headline, paragraph, CTA — plain HTML/Tailwind, so
+  it's accessible, indexable, and animates with Framer Motion.
+- **Right: `<HeroScene />`**, dynamically imported with `ssr: false`
+  (WebGL can't run on the server) — a `@react-three/fiber` `<Canvas>`.
 
-## Deploy on Vercel
+Inside the canvas:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `BlueprintGrid.tsx` — the architectural floor grid (drei's `<Grid>`).
+- `LaptopBase.tsx` — the laptop, built from primitive geometry for now.
+  Swap it for a Blender-authored `laptop.glb` + `useGLTF()` later; nothing
+  else in the scene needs to change.
+- `FloatingUI.tsx` — the four exploded UI/code/component layers. Each one
+  uses drei's `<Html transform>`, which maps **real DOM** (actual Tailwind
+  markup, not a canvas texture) onto a 3D-transformed plane — so the
+  panel content stays crisp and easy to restyle.
+- `LayerAnnotations.tsx` — the "UI Layer / Code Layer / Structure" labels,
+  each with an SVG-equivalent 3D `<Line>` leader line pointing at its
+  panel.
+- `HeroScene.tsx` — camera, lighting, and `ParallaxRig`, which rotates the
+  whole rig a few degrees toward the pointer (parallax, not free orbit).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Scroll-driven explode:** `Hero.tsx` tracks scroll progress for the
+section with Framer Motion's `useScroll`, and writes it into a plain
+`useRef` (not React state, to avoid a re-render every frame) that's
+handed down into the canvas. Inside `FloatingUI.tsx`, each layer reads
+that ref in its own `useFrame` loop and lerps outward along its own axis
+as you scroll — the stack pulls apart into an exploded diagram.
+
+## Extending it
+
+- **Case study 3D interaction** (section 12 of the plan — hovering a case
+  study reveals a UI → Design System → Architecture → Code stack): build
+  it as a sibling to `FloatingUI.tsx` reused inside a small canvas on the
+  case study page, driven by hover state instead of scroll.
+- **Lenis / GSAP**: not wired in yet, since Framer Motion covers the
+  current scroll needs. Add `lenis` for buttery inertia scrolling once
+  you're happy with the base experience, and layer GSAP's ScrollTrigger
+  in only if you need scroll-scrubbed sequences more complex than the
+  linear explode above.
+- **Laptop GLB**: drop the file in `public/models/laptop.glb`, then
+  replace the contents of `LaptopBase.tsx` with a `useGLTF('/models/laptop.glb')`
+  call — the rest of the scene graph doesn't change.
+
+## Notes
+
+- Colors, type scale, and spacing are pulled into `tailwind.config.ts`
+  as design tokens (`ink`, `cream`, `lime`, `stone`, …) rather than
+  hardcoded per component.
+- `prefers-reduced-motion` is respected globally in `globals.css`.
+- This was scaffolded and dependency-checked in a sandboxed environment;
+  run `npm run build` locally once to confirm it's clean on your Node
+  version before deploying.
