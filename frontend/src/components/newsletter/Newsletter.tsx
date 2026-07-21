@@ -30,13 +30,13 @@ export default function Newsletter() {
         <div className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-lime">
           Weekly dispatch
         </div>
-        <p className="text-sm leading-relaxed text-white/60">
+        <p className="text-[0.86rem] leading-relaxed text-white/60">
           One thoughtful email each week about designing and building better digital
           experiences.
         </p>
       </div>
-      <div>
-        <form onSubmit={handleSubmit} className="mt-6 flex gap-2">
+      <div className="mt-5">
+        <form onSubmit={handleSubmit} className="flex gap-2">
           <input
             type="email"
             required
