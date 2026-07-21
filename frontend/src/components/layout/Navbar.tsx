@@ -11,7 +11,7 @@ const NAV_LINKS = [
 export default function Navbar() {
   return (
     <nav className="relative z-20 flex items-center justify-between px-6 py-7 md:px-12">
-      <Link href="/" className="font-mono text-sm font-bold tracking-[0.15em] text-white">
+      <Link href="/" className="font-mono text-[0.95rem] font-bold tracking-[0.1em] text-white">
         SOLO DESIGN
       </Link>
 
