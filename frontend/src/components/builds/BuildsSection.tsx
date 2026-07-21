@@ -13,11 +13,13 @@ export default function BuildsSection() {
           View all →
         </a>
       </div>
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.6fr_1fr_1fr]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.6fr_1fr]">
         <FeaturedBuild />
-        {caseStudies.map((study, i) => (
-          <CaseStudyCard key={study.title} study={study} delay={i * 0.1} />
-        ))}
+        <div className="grid grid-rows-2 gap-6">
+          {caseStudies.map((study, i) => (
+            <CaseStudyCard key={study.title} study={study} delay={i * 0.1} />
+          ))}
+        </div>
       </div>
     </section>
   );
