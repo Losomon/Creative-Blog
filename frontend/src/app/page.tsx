@@ -23,8 +23,10 @@ export default function Home() {
         </div>
 
         <section className="mx-auto max-w-[1240px] px-6 pb-14 pt-10 md:px-12">
-          <div className="section-head">
-            <span className="eyebrow">Explore topics</span>
+          <div className="mb-5">
+            <span className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-ink">
+              Explore topics
+            </span>
           </div>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-[repeat(4,1fr)_1.3fr]">
             <div className="lg:col-span-4">
