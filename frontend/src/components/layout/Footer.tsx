@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="flex flex-col items-center gap-4 bg-ink px-6 py-6 text-sm text-white/40 sm:flex-row sm:justify-between md:px-12">
+    <footer className="flex flex-col items-center gap-4 bg-ink px-8 py-8 text-sm text-white/40 sm:flex-row sm:justify-between md:px-16">
       <span>© 2026 Solo Design</span>
       <span>Built in public. Always learning.</span>
       <div className="flex gap-5">
